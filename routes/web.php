@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+
 use App\Http\Controllers\TiendaController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CategoriaController;

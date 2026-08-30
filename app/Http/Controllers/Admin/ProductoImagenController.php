@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class ProductoImagenController extends Controller
 {
-    public function store(Request $request, Producto $producto)
+        public function store(Request $request, Producto $producto)
     {
         $request->validate([
             'imagenes' => ['required', 'array'],
@@ -17,16 +17,26 @@ class ProductoImagenController extends Controller
         ]);
 
         $ordenActual = $producto->imagenes()->max('orden') ?? -1;
+        $nuevas = [];
 
         foreach ($request->file('imagenes') as $archivo) {
             $ordenActual++;
-            $producto->imagenes()->create([
+            $img = $producto->imagenes()->create([
                 'ruta' => $archivo->store('productos', 'public'),
                 'orden' => $ordenActual,
             ]);
+
+            $nuevas[] = [
+                'id' => $img->id,
+                'url' => asset('storage/' . $img->ruta),
+                'color' => $img->color,
+            ];
         }
 
-        return response()->json(['mensaje' => 'Imágenes agregadas correctamente.']);
+        return response()->json([
+            'mensaje' => 'Imágenes agregadas correctamente.',
+            'imagenes' => $nuevas,
+        ]);
     }
 
     public function destroy(Producto $producto, ProductoImagen $imagen)

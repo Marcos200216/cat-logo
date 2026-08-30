@@ -767,6 +767,7 @@
         <script>
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
         const productoId = {{ $producto->id }};
+        const coloresDisponibles = @json($coloresVariantes->values());
 
         // ===== Combo buscable de subcategoría =====
         const inputSubcatBuscar = document.getElementById('input-subcategoria-buscar');
@@ -857,7 +858,7 @@
     window.location.href = "{{ route('admin.productos.index') }}";
 });
 
-        document.getElementById('input-imagenes').addEventListener('change', async function(e) {
+                document.getElementById('input-imagenes').addEventListener('change', async function(e) {
             const datos = new FormData();
             for (const archivo of e.target.files) {
                 datos.append('imagenes[]', archivo);
@@ -873,16 +874,37 @@
             });
             const resultado = await respuesta.json();
 
+            resultado.imagenes.forEach(function (img) {
+                const opcionesColor = coloresDisponibles.map(function (color) {
+                    return `<option value="${color}">${color}</option>`;
+                }).join('');
+
+                const html = `
+                    <div class="imagen-tarjeta" data-imagen-id="${img.id}">
+                        <div class="imagen-marco">
+                            <img src="${img.url}">
+                            <button class="imagen-eliminar" onclick="eliminarImagen(${img.id})">&times;</button>
+                        </div>
+                        <select class="imagen-color" onchange="actualizarColorImagen(${img.id}, this.value)">
+                            <option value="">General</option>
+                            ${opcionesColor}
+                        </select>
+                    </div>
+                `;
+                document.getElementById('galeria').insertAdjacentHTML('beforeend', html);
+            });
+
+            e.target.value = '';
+
             await Swal.fire({
                 icon: 'success',
                 title: resultado.mensaje,
                 timer: 1500,
                 showConfirmButton: false
             });
-            location.reload();
         });
 
-        function eliminarImagen(id) {
+                function eliminarImagen(id) {
             Swal.fire({
                 icon: 'warning',
                 title: '¿Eliminar esta imagen?',
@@ -899,7 +921,7 @@
                         'Accept': 'application/json'
                     },
                 });
-                location.reload();
+                document.querySelector(`.imagen-tarjeta[data-imagen-id="${id}"]`).remove();
             });
         }
 
