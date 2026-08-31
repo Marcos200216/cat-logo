@@ -11,13 +11,19 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
+       ->withMiddleware(function (Middleware $middleware): void {
         $middleware->trustProxies(at: '*', headers: Request::HEADER_X_FORWARDED_FOR |
             Request::HEADER_X_FORWARDED_HOST |
             Request::HEADER_X_FORWARDED_PORT |
             Request::HEADER_X_FORWARDED_PROTO);
 
-           
+        $middleware->alias([
+            'panel.token' => \App\Http\Middleware\VerificarTokenPanel::class,
+        ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'api/panel/*',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

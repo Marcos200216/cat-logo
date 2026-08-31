@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\ProductoController;
 use App\Http\Controllers\Admin\ProductoImagenController;
 use App\Http\Controllers\Admin\ProductoVarianteController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Api\PanelProductoController;
 
 // ===== Tienda (público) =====
 Route::get('/', [TiendaController::class, 'home'])->name('tienda.home');
@@ -64,4 +65,10 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::delete('/productos/{producto}/variantes/{variante}', [ProductoVarianteController::class, 'destroy'])->name('productos.variantes.destroy');
     Route::put('productos/{producto}/imagenes/{imagen}', [ProductoImagenController::class, 'update'])
         ->name('productos.imagenes.update');
+});
+
+// ===== Panel de carga con IA (token, sin sesión) =====
+Route::middleware('panel.token')->group(function () {
+    Route::post('/api/panel/productos', [PanelProductoController::class, 'store']);
+    Route::post('/api/panel/productos/{producto}/imagenes', [PanelProductoController::class, 'subirImagen']);
 });
