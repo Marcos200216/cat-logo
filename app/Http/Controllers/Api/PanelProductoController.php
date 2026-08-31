@@ -14,6 +14,26 @@ class PanelProductoController extends Controller
     // Fijo en 'mayorista' porque por ahora el panel solo carga a ese canal
     private string $canal = 'mayorista';
 
+public function categorias()
+{
+    $subcategorias = \App\Models\Subcategoria::with('categoria')
+        ->whereHas('categoria', fn($q) => $q->where('canal', $this->canal))
+        ->orderBy('categoria_id')
+        ->orderBy('orden')
+        ->get();
+
+    $resultado = $subcategorias->map(function ($sub) {
+        return [
+            'categoria' => $sub->categoria->nombre,
+            'subcategoria_id' => $sub->id,
+            'subcategoria' => $sub->nombre,
+        ];
+    });
+
+    return response()->json($resultado);
+}
+
+
     public function store(Request $request)
     {
         $datos = $request->validate([

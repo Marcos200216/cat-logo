@@ -69,6 +69,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
 // ===== Panel de carga con IA (token, sin sesión) =====
 Route::middleware('panel.token')->group(function () {
+    Route::get('/api/panel/categorias', [PanelProductoController::class, 'categorias']);
     Route::post('/api/panel/productos', [PanelProductoController::class, 'store']);
     Route::post('/api/panel/productos/{producto}/imagenes', [PanelProductoController::class, 'subirImagen']);
 });
