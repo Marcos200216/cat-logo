@@ -1,0 +1,42 @@
+[33mcommit 3883c24724f790fc0972a219f3d54b92a0ff7a2e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: Marcos200216 <110418775+Marcos200216@users.noreply.github.com>
+Date:   Sun Aug 30 17:11:01 2026 -0600
+
+    agregar imágenes de productos y categorías
+
+[1mdiff --git a/bootstrap/app.php b/bootstrap/app.php[m
+[1mindex 5aec003..fb4a671 100644[m
+[1m--- a/bootstrap/app.php[m
+[1m+++ b/bootstrap/app.php[m
+[36m@@ -16,6 +16,8 @@[m
+             Request::HEADER_X_FORWARDED_HOST |[m
+             Request::HEADER_X_FORWARDED_PORT |[m
+             Request::HEADER_X_FORWARDED_PROTO);[m
+[32m+[m
+[32m+[m[41m           [m
+     })[m
+     ->withExceptions(function (Exceptions $exceptions): void {[m
+         //[m
+[1mdiff --git a/config/services.php b/config/services.php[m
+[1mindex 6a90eb8..de1bcf8 100644[m
+[1m--- a/config/services.php[m
+[1m+++ b/config/services.php[m
+[36m@@ -34,5 +34,6 @@[m
+             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),[m
+         ],[m
+     ],[m
+[32m+[m[41m    [m
+ [m
+ ];[m
+[1mdiff --git a/routes/web.php b/routes/web.php[m
+[1mindex 88f4e95..cc8bd26 100644[m
+[1m--- a/routes/web.php[m
+[1m+++ b/routes/web.php[m
+[36m@@ -2,6 +2,7 @@[m
+ [m
+ use Illuminate\Support\Facades\Route;[m
+ [m
+[32m+[m
+ use App\Http\Controllers\TiendaController;[m
+ use App\Http\Controllers\Admin\AuthController;[m
+ use App\Http\Controllers\Admin\CategoriaController;[m

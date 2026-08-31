@@ -752,6 +752,7 @@
 
 @section('contenido')
 
+
     <div class="cat-encabezado">
         <div class="cat-filtros">
             <div class="buscador">
