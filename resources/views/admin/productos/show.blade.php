@@ -904,6 +904,7 @@
             });
         });
 
+        
                 function eliminarImagen(id) {
             Swal.fire({
                 icon: 'warning',
