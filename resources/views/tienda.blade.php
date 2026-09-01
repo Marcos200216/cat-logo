@@ -561,6 +561,103 @@
             }
         }
 
+                    /* ============ Modal selector de WhatsApp ============ */
+        .modal-selector-wsp .modal-ayuda-caja {
+            padding: 30px 26px 26px;
+        }
+
+        .modal-selector-wsp .modal-ayuda-encabezado p {
+            margin-top: 6px;
+            font-size: 13px;
+            color: var(--tinta);
+            opacity: 0.62;
+            line-height: 1.5;
+        }
+
+        .selector-wsp-lista {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .selector-wsp-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            width: 100%;
+            padding: 13px 14px;
+            background: var(--blanco);
+            border: 1px solid rgba(26, 26, 24, 0.08);
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .selector-wsp-item:hover {
+            border-color: rgba(37, 211, 102, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px -10px rgba(26, 26, 24, 0.25);
+        }
+
+        .selector-wsp-item:active {
+            transform: translateY(0);
+        }
+
+        .selector-wsp-avatar {
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2CD46A, #22B85A);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .selector-wsp-avatar svg {
+            width: 20px;
+            height: 20px;
+            color: #FFFFFF;
+        }
+
+        .selector-wsp-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .selector-wsp-nombre {
+            font-family: 'Fraunces', serif;
+            font-size: 15px;
+            color: var(--tinta);
+        }
+
+        .selector-wsp-sub {
+            font-size: 11.5px;
+            color: var(--tinta);
+            opacity: 0.5;
+            margin-top: 1px;
+        }
+
+        .selector-wsp-flecha {
+            flex-shrink: 0;
+            width: 16px;
+            height: 16px;
+            color: var(--arena);
+            transition: transform 0.2s ease;
+        }
+
+        .selector-wsp-item:hover .selector-wsp-flecha {
+            transform: translateX(3px);
+            color: var(--musgo);
+        }
+
+        @media (max-width: 480px) {
+            .modal-selector-wsp .modal-ayuda-caja {
+                padding: 26px 20px 22px;
+            }
+        }
         /* ============ Footer ============ */
         .pie {
             background: var(--tinta);
@@ -679,11 +776,14 @@
             height: 26px;
         }
 
-        .pie-redes-iconos a.icono-whatsapp {
+              .pie-redes-iconos .icono-whatsapp {
             color: #25D366;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
 
-        .pie-redes-iconos a.icono-whatsapp svg {
+        .pie-redes-iconos .icono-whatsapp svg {
             width: 26px;
             height: 26px;
         }
@@ -1047,9 +1147,14 @@
 
 <body>
 
-    @php
+       @php
         $modo = $modo ?? 'normal';
         $prefijo = $modo === 'mayorista' ? 'mayorista' : 'tienda';
+        $esMayorista = $modo === 'mayorista';
+
+        $facebookUrl = $esMayorista ? config('app.facebook_url_mayorista') : config('app.facebook_url');
+        $instagramUrl = $esMayorista ? config('app.instagram_url_mayorista') : config('app.instagram_url');
+        $whatsappMayorista = config('app.whatsapp_mayorista');
     @endphp
 
     <header class="cabecera">
@@ -1076,16 +1181,28 @@
                     @endforeach
                 </div>
 
-                <a href="{{ config('app.whatsapp_url', '#') }}" class="btn-whatsapp-nav" target="_blank"
-                    rel="noopener">
-                    <span class="icono-wsp">
-                        <svg viewBox="0 0 32 32" fill="currentColor">
-                            <path
-                                d="M16.001 3C9.096 3 3.5 8.596 3.5 15.5c0 2.2.57 4.35 1.66 6.24L3 29l7.42-2.11a12.44 12.44 0 0 0 5.58 1.33h.01c6.9 0 12.5-5.6 12.5-12.5S22.9 3 16.001 3zm0 22.55h-.01a10.4 10.4 0 0 1-5.3-1.45l-.38-.22-3.94 1.12 1.15-3.83-.25-.4a10.36 10.36 0 0 1-1.6-5.53c0-5.74 4.67-10.4 10.42-10.4 2.78 0 5.4 1.08 7.36 3.05a10.32 10.32 0 0 1 3.05 7.36c0 5.74-4.67 10.4-10.5 10.4zm5.72-7.75c-.31-.16-1.86-.92-2.15-1.02-.29-.1-.5-.16-.71.16-.21.31-.81 1.02-.99 1.23-.18.21-.37.24-.68.08-.31-.16-1.31-.48-2.5-1.55-.92-.82-1.55-1.83-1.73-2.14-.18-.31-.02-.48.14-.63.14-.14.31-.37.47-.55.16-.18.21-.31.31-.52.1-.21.05-.39-.02-.55-.08-.16-.71-1.71-.97-2.34-.26-.61-.52-.53-.71-.54-.18-.01-.39-.01-.6-.01s-.55.08-.84.39c-.29.31-1.1 1.08-1.1 2.63s1.13 3.05 1.29 3.26c.16.21 2.22 3.39 5.38 4.75.75.32 1.34.51 1.8.66.76.24 1.44.21 1.99.13.61-.09 1.86-.76 2.12-1.5.26-.73.26-1.35.18-1.48-.07-.13-.28-.21-.59-.37z" />
-                        </svg>
-                    </span>
-                    Escríbenos
-                </a>
+                                @if ($esMayorista)
+                    <button type="button" class="btn-whatsapp-nav" data-abrir-selector-wsp>
+                        <span class="icono-wsp">
+                            <svg viewBox="0 0 32 32" fill="currentColor">
+                                <path
+                                    d="M16.001 3C9.096 3 3.5 8.596 3.5 15.5c0 2.2.57 4.35 1.66 6.24L3 29l7.42-2.11a12.44 12.44 0 0 0 5.58 1.33h.01c6.9 0 12.5-5.6 12.5-12.5S22.9 3 16.001 3zm0 22.55h-.01a10.4 10.4 0 0 1-5.3-1.45l-.38-.22-3.94 1.12 1.15-3.83-.25-.4a10.36 10.36 0 0 1-1.6-5.53c0-5.74 4.67-10.4 10.42-10.4 2.78 0 5.4 1.08 7.36 3.05a10.32 10.32 0 0 1 3.05 7.36c0 5.74-4.67 10.4-10.5 10.4zm5.72-7.75c-.31-.16-1.86-.92-2.15-1.02-.29-.1-.5-.16-.71.16-.21.31-.81 1.02-.99 1.23-.18.21-.37.24-.68.08-.31-.16-1.31-.48-2.5-1.55-.92-.82-1.55-1.83-1.73-2.14-.18-.31-.02-.48.14-.63.14-.14.31-.37.47-.55.16-.18.21-.31.31-.52.1-.21.05-.39-.02-.55-.08-.16-.71-1.71-.97-2.34-.26-.61-.52-.53-.71-.54-.18-.01-.39-.01-.6-.01s-.55.08-.84.39c-.29.31-1.1 1.08-1.1 2.63s1.13 3.05 1.29 3.26c.16.21 2.22 3.39 5.38 4.75.75.32 1.34.51 1.8.66.76.24 1.44.21 1.99.13.61-.09 1.86-.76 2.12-1.5.26-.73.26-1.35.18-1.48-.07-.13-.28-.21-.59-.37z" />
+                            </svg>
+                        </span>
+                        Escríbenos
+                    </button>
+                @else
+                    <a href="{{ config('app.whatsapp_url', '#') }}" class="btn-whatsapp-nav" target="_blank"
+                        rel="noopener">
+                        <span class="icono-wsp">
+                            <svg viewBox="0 0 32 32" fill="currentColor">
+                                <path
+                                    d="M16.001 3C9.096 3 3.5 8.596 3.5 15.5c0 2.2.57 4.35 1.66 6.24L3 29l7.42-2.11a12.44 12.44 0 0 0 5.58 1.33h.01c6.9 0 12.5-5.6 12.5-12.5S22.9 3 16.001 3zm0 22.55h-.01a10.4 10.4 0 0 1-5.3-1.45l-.38-.22-3.94 1.12 1.15-3.83-.25-.4a10.36 10.36 0 0 1-1.6-5.53c0-5.74 4.67-10.4 10.42-10.4 2.78 0 5.4 1.08 7.36 3.05a10.32 10.32 0 0 1 3.05 7.36c0 5.74-4.67 10.4-10.5 10.4zm5.72-7.75c-.31-.16-1.86-.92-2.15-1.02-.29-.1-.5-.16-.71.16-.21.31-.81 1.02-.99 1.23-.18.21-.37.24-.68.08-.31-.16-1.31-.48-2.5-1.55-.92-.82-1.55-1.83-1.73-2.14-.18-.31-.02-.48.14-.63.14-.14.31-.37.47-.55.16-.18.21-.31.31-.52.1-.21.05-.39-.02-.55-.08-.16-.71-1.71-.97-2.34-.26-.61-.52-.53-.71-.54-.18-.01-.39-.01-.6-.01s-.55.08-.84.39c-.29.31-1.1 1.08-1.1 2.63s1.13 3.05 1.29 3.26c.16.21 2.22 3.39 5.38 4.75.75.32 1.34.51 1.8.66.76.24 1.44.21 1.99.13.61-.09 1.86-.76 2.12-1.5.26-.73.26-1.35.18-1.48-.07-.13-.28-.21-.59-.37z" />
+                            </svg>
+                        </span>
+                        Escríbenos
+                    </a>
+                @endif
             </nav>
 
             <button type="button" class="btn-hamburguesa" id="boton-menu-movil" aria-expanded="false"
@@ -1105,15 +1222,28 @@
                     <a href="{{ route($prefijo . '.categoria', $cat->slug) }}">{{ $cat->nombre }}</a>
                 @endforeach
             </nav>
-            <a href="{{ config('app.whatsapp_url', '#') }}" class="btn-whatsapp-nav" target="_blank" rel="noopener">
-                <span class="icono-wsp">
-                    <svg viewBox="0 0 32 32" fill="currentColor">
-                        <path
-                            d="M16.001 3C9.096 3 3.5 8.596 3.5 15.5c0 2.2.57 4.35 1.66 6.24L3 29l7.42-2.11a12.44 12.44 0 0 0 5.58 1.33h.01c6.9 0 12.5-5.6 12.5-12.5S22.9 3 16.001 3zm0 22.55h-.01a10.4 10.4 0 0 1-5.3-1.45l-.38-.22-3.94 1.12 1.15-3.83-.25-.4a10.36 10.36 0 0 1-1.6-5.53c0-5.74 4.67-10.4 10.42-10.4 2.78 0 5.4 1.08 7.36 3.05a10.32 10.32 0 0 1 3.05 7.36c0 5.74-4.67 10.4-10.5 10.4zm5.72-7.75c-.31-.16-1.86-.92-2.15-1.02-.29-.1-.5-.16-.71.16-.21.31-.81 1.02-.99 1.23-.18.21-.37.24-.68.08-.31-.16-1.31-.48-2.5-1.55-.92-.82-1.55-1.83-1.73-2.14-.18-.31-.02-.48.14-.63.14-.14.31-.37.47-.55.16-.18.21-.31.31-.52.1-.21.05-.39-.02-.55-.08-.16-.71-1.71-.97-2.34-.26-.61-.52-.53-.71-.54-.18-.01-.39-.01-.6-.01s-.55.08-.84.39c-.29.31-1.1 1.08-1.1 2.63s1.13 3.05 1.29 3.26c.16.21 2.22 3.39 5.38 4.75.75.32 1.34.51 1.8.66.76.24 1.44.21 1.99.13.61-.09 1.86-.76 2.12-1.5.26-.73.26-1.35.18-1.48-.07-.13-.28-.21-.59-.37z" />
-                    </svg>
-                </span>
-                Escríbenos
-            </a>
+                       @if ($esMayorista)
+                <button type="button" class="btn-whatsapp-nav" data-abrir-selector-wsp>
+                    <span class="icono-wsp">
+                        <svg viewBox="0 0 32 32" fill="currentColor">
+                            <path
+                                d="M16.001 3C9.096 3 3.5 8.596 3.5 15.5c0 2.2.57 4.35 1.66 6.24L3 29l7.42-2.11a12.44 12.44 0 0 0 5.58 1.33h.01c6.9 0 12.5-5.6 12.5-12.5S22.9 3 16.001 3zm0 22.55h-.01a10.4 10.4 0 0 1-5.3-1.45l-.38-.22-3.94 1.12 1.15-3.83-.25-.4a10.36 10.36 0 0 1-1.6-5.53c0-5.74 4.67-10.4 10.42-10.4 2.78 0 5.4 1.08 7.36 3.05a10.32 10.32 0 0 1 3.05 7.36c0 5.74-4.67 10.4-10.5 10.4zm5.72-7.75c-.31-.16-1.86-.92-2.15-1.02-.29-.1-.5-.16-.71.16-.21.31-.81 1.02-.99 1.23-.18.21-.37.24-.68.08-.31-.16-1.31-.48-2.5-1.55-.92-.82-1.55-1.83-1.73-2.14-.18-.31-.02-.48.14-.63.14-.14.31-.37.47-.55.16-.18.21-.31.31-.52.1-.21.05-.39-.02-.55-.08-.16-.71-1.71-.97-2.34-.26-.61-.52-.53-.71-.54-.18-.01-.39-.01-.6-.01s-.55.08-.84.39c-.29.31-1.1 1.08-1.1 2.63s1.13 3.05 1.29 3.26c.16.21 2.22 3.39 5.38 4.75.75.32 1.34.51 1.8.66.76.24 1.44.21 1.99.13.61-.09 1.86-.76 2.12-1.5.26-.73.26-1.35.18-1.48-.07-.13-.28-.21-.59-.37z" />
+                        </svg>
+                    </span>
+                    Escríbenos
+                </button>
+            @else
+                <a href="{{ config('app.whatsapp_url', '#') }}" class="btn-whatsapp-nav" target="_blank"
+                    rel="noopener">
+                    <span class="icono-wsp">
+                        <svg viewBox="0 0 32 32" fill="currentColor">
+                            <path
+                                d="M16.001 3C9.096 3 3.5 8.596 3.5 15.5c0 2.2.57 4.35 1.66 6.24L3 29l7.42-2.11a12.44 12.44 0 0 0 5.58 1.33h.01c6.9 0 12.5-5.6 12.5-12.5S22.9 3 16.001 3zm0 22.55h-.01a10.4 10.4 0 0 1-5.3-1.45l-.38-.22-3.94 1.12 1.15-3.83-.25-.4a10.36 10.36 0 0 1-1.6-5.53c0-5.74 4.67-10.4 10.42-10.4 2.78 0 5.4 1.08 7.36 3.05a10.32 10.32 0 0 1 3.05 7.36c0 5.74-4.67 10.4-10.5 10.4zm5.72-7.75c-.31-.16-1.86-.92-2.15-1.02-.29-.1-.5-.16-.71.16-.21.31-.81 1.02-.99 1.23-.18.21-.37.24-.68.08-.31-.16-1.31-.48-2.5-1.55-.92-.82-1.55-1.83-1.73-2.14-.18-.31-.02-.48.14-.63.14-.14.31-.37.47-.55.16-.18.21-.31.31-.52.1-.21.05-.39-.02-.55-.08-.16-.71-1.71-.97-2.34-.26-.61-.52-.53-.71-.54-.18-.01-.39-.01-.6-.01s-.55.08-.84.39c-.29.31-1.1 1.08-1.1 2.63s1.13 3.05 1.29 3.26c.16.21 2.22 3.39 5.38 4.75.75.32 1.34.51 1.8.66.76.24 1.44.21 1.99.13.61-.09 1.86-.76 2.12-1.5.26-.73.26-1.35.18-1.48-.07-.13-.28-.21-.59-.37z" />
+                        </svg>
+                    </span>
+                    Escríbenos
+                </a>
+            @endif
         </div>
     </div>
 
@@ -1144,29 +1274,37 @@
                     <span class="ojo-eyebrow">Síguenos</span>
                     <div class="pie-redes-iconos">
                         {{-- TODO: reemplazar "#" por el link real de Facebook --}}
-                        <a href="https://www.facebook.com/dist.azur" target="_blank" rel="noopener"
+                                                <a href="{{ $facebookUrl }}" target="_blank" rel="noopener"
                             aria-label="Facebook" class="icono-facebook">
                             <svg viewBox="0 0 320 512" fill="currentColor">
                                 <path
                                     d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z" />
                             </svg>
                         </a>
-                        {{-- TODO: reemplazar "#" por el link real de Instagram --}}
-                        <a href="https://www.instagram.com/azur.distribuidora/" target="_blank" rel="noopener"
+                        <a href="{{ $instagramUrl }}" target="_blank" rel="noopener"
                             aria-label="Instagram" class="icono-instagram">
                             <svg viewBox="0 0 24 24" fill="currentColor">
                                 <path
                                     d="M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.97.24 2.43.4.61.24 1.05.52 1.51.98.46.46.74.9.98 1.51.16.46.35 1.26.4 2.43.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.24 1.97-.4 2.43-.24.61-.52 1.05-.98 1.51-.46.46-.9.74-1.51.98-.46.16-1.26.35-2.43.4-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.97-.24-2.43-.4a4.1 4.1 0 0 1-1.51-.98 4.1 4.1 0 0 1-.98-1.51c-.16-.46-.35-1.26-.4-2.43-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.24-1.97.4-2.43.24-.61.52-1.05.98-1.51.46-.46.9-.74 1.51-.98.46-.16 1.26-.35 2.43-.4C8.42 2.21 8.8 2.2 12 2.2zm0 3.05a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5zm0 11.13a4.38 4.38 0 1 1 0-8.76 4.38 4.38 0 0 1 0 8.76zm7.02-11.4a1.58 1.58 0 1 1-3.15 0 1.58 1.58 0 0 1 3.15 0z" />
                             </svg>
                         </a>
-                        {{-- TODO: reemplazar "config('app.whatsapp_url')" por el número real si es distinto al del botón de navegación --}}
-                        <a href="{{ config('app.whatsapp_url', '#') }}" target="_blank" rel="noopener"
-                            aria-label="WhatsApp" class="icono-whatsapp">
-                            <svg viewBox="0 0 32 32" fill="currentColor">
-                                <path
-                                    d="M16.001 3C9.096 3 3.5 8.596 3.5 15.5c0 2.2.57 4.35 1.66 6.24L3 29l7.42-2.11a12.44 12.44 0 0 0 5.58 1.33h.01c6.9 0 12.5-5.6 12.5-12.5S22.9 3 16.001 3zm0 22.55h-.01a10.4 10.4 0 0 1-5.3-1.45l-.38-.22-3.94 1.12 1.15-3.83-.25-.4a10.36 10.36 0 0 1-1.6-5.53c0-5.74 4.67-10.4 10.42-10.4 2.78 0 5.4 1.08 7.36 3.05a10.32 10.32 0 0 1 3.05 7.36c0 5.74-4.67 10.4-10.5 10.4zm5.72-7.75c-.31-.16-1.86-.92-2.15-1.02-.29-.1-.5-.16-.71.16-.21.31-.81 1.02-.99 1.23-.18.21-.37.24-.68.08-.31-.16-1.31-.48-2.5-1.55-.92-.82-1.55-1.83-1.73-2.14-.18-.31-.02-.48.14-.63.14-.14.31-.37.47-.55.16-.18.21-.31.31-.52.1-.21.05-.39-.02-.55-.08-.16-.71-1.71-.97-2.34-.26-.61-.52-.53-.71-.54-.18-.01-.39-.01-.6-.01s-.55.08-.84.39c-.29.31-1.1 1.08-1.1 2.63s1.13 3.05 1.29 3.26c.16.21 2.22 3.39 5.38 4.75.75.32 1.34.51 1.8.66.76.24 1.44.21 1.99.13.61-.09 1.86-.76 2.12-1.5.26-.73.26-1.35.18-1.48-.07-.13-.28-.21-.59-.37z" />
-                            </svg>
-                        </a>
+                                               @if ($esMayorista)
+                                                        <button type="button" data-abrir-selector-wsp aria-label="WhatsApp"
+                                class="icono-whatsapp">
+                                <svg viewBox="0 0 32 32" fill="currentColor">
+                                    <path
+                                        d="M16.001 3C9.096 3 3.5 8.596 3.5 15.5c0 2.2.57 4.35 1.66 6.24L3 29l7.42-2.11a12.44 12.44 0 0 0 5.58 1.33h.01c6.9 0 12.5-5.6 12.5-12.5S22.9 3 16.001 3zm0 22.55h-.01a10.4 10.4 0 0 1-5.3-1.45l-.38-.22-3.94 1.12 1.15-3.83-.25-.4a10.36 10.36 0 0 1-1.6-5.53c0-5.74 4.67-10.4 10.42-10.4 2.78 0 5.4 1.08 7.36 3.05a10.32 10.32 0 0 1 3.05 7.36c0 5.74-4.67 10.4-10.5 10.4zm5.72-7.75c-.31-.16-1.86-.92-2.15-1.02-.29-.1-.5-.16-.71.16-.21.31-.81 1.02-.99 1.23-.18.21-.37.24-.68.08-.31-.16-1.31-.48-2.5-1.55-.92-.82-1.55-1.83-1.73-2.14-.18-.31-.02-.48.14-.63.14-.14.31-.37.47-.55.16-.18.21-.31.31-.52.1-.21.05-.39-.02-.55-.08-.16-.71-1.71-.97-2.34-.26-.61-.52-.53-.71-.54-.18-.01-.39-.01-.6-.01s-.55.08-.84.39c-.29.31-1.1 1.08-1.1 2.63s1.13 3.05 1.29 3.26c.16.21 2.22 3.39 5.38 4.75.75.32 1.34.51 1.8.66.76.24 1.44.21 1.99.13.61-.09 1.86-.76 2.12-1.5.26-.73.26-1.35.18-1.48-.07-.13-.28-.21-.59-.37z" />
+                                </svg>
+                            </button>
+                        @else
+                            <a href="{{ config('app.whatsapp_url', '#') }}" target="_blank" rel="noopener"
+                                aria-label="WhatsApp" class="icono-whatsapp">
+                                <svg viewBox="0 0 32 32" fill="currentColor">
+                                    <path
+                                        d="M16.001 3C9.096 3 3.5 8.596 3.5 15.5c0 2.2.57 4.35 1.66 6.24L3 29l7.42-2.11a12.44 12.44 0 0 0 5.58 1.33h.01c6.9 0 12.5-5.6 12.5-12.5S22.9 3 16.001 3zm0 22.55h-.01a10.4 10.4 0 0 1-5.3-1.45l-.38-.22-3.94 1.12 1.15-3.83-.25-.4a10.36 10.36 0 0 1-1.6-5.53c0-5.74 4.67-10.4 10.42-10.4 2.78 0 5.4 1.08 7.36 3.05a10.32 10.32 0 0 1 3.05 7.36c0 5.74-4.67 10.4-10.5 10.4zm5.72-7.75c-.31-.16-1.86-.92-2.15-1.02-.29-.1-.5-.16-.71.16-.21.31-.81 1.02-.99 1.23-.18.21-.37.24-.68.08-.31-.16-1.31-.48-2.5-1.55-.92-.82-1.55-1.83-1.73-2.14-.18-.31-.02-.48.14-.63.14-.14.31-.37.47-.55.16-.18.21-.31.31-.52.1-.21.05-.39-.02-.55-.08-.16-.71-1.71-.97-2.34-.26-.61-.52-.53-.71-.54-.18-.01-.39-.01-.6-.01s-.55.08-.84.39c-.29.31-1.1 1.08-1.1 2.63s1.13 3.05 1.29 3.26c.16.21 2.22 3.39 5.38 4.75.75.32 1.34.51 1.8.66.76.24 1.44.21 1.99.13.61-.09 1.86-.76 2.12-1.5.26-.73.26-1.35.18-1.48-.07-.13-.28-.21-.59-.37z" />
+                                </svg>
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -1250,10 +1388,16 @@
                 </div>
             @endif
 
-            <div class="modal-ayuda-cta">
-                <a href="{{ config('app.whatsapp_url', '#') }}" target="_blank" rel="noopener">
-                    ¿Tienes dudas? Escríbenos directamente →
-                </a>
+                        <div class="modal-ayuda-cta">
+                @if ($esMayorista)
+                    <a href="#" data-abrir-selector-wsp>
+                        ¿Tienes dudas? Escríbenos directamente →
+                    </a>
+                @else
+                    <a href="{{ config('app.whatsapp_url', '#') }}" target="_blank" rel="noopener">
+                        ¿Tienes dudas? Escríbenos directamente →
+                    </a>
+                @endif
             </div>
         </div>
     </div>
@@ -1294,6 +1438,42 @@
                     </svg>
                     Enviar consulta por WhatsApp
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: selector de WhatsApp (solo mayorista) -->
+        <!-- Modal: selector de WhatsApp (solo mayorista) -->
+    <div class="modal-ayuda modal-selector-wsp" id="modal-selector-wsp" style="max-width:none;">
+        <div class="modal-ayuda-fondo" data-cerrar-selector-wsp></div>
+        <div class="modal-ayuda-caja" role="dialog" aria-modal="true" aria-labelledby="selector-wsp-titulo"
+            style="max-width:360px;">
+            <button type="button" class="modal-ayuda-cerrar" data-cerrar-selector-wsp
+                aria-label="Cerrar">&times;</button>
+            <div class="modal-ayuda-encabezado">
+                <span class="ojo-eyebrow">WhatsApp</span>
+                <h3 class="serif" id="selector-wsp-titulo">¿Con quién deseas hablar?</h3>
+                <p>Elige un contacto para continuar tu consulta.</p>
+            </div>
+            <div class="selector-wsp-lista">
+                @foreach ($whatsappMayorista as $contacto)
+                    <button type="button" class="selector-wsp-item" data-wsp-base="{{ $contacto['url'] }}">
+                        <span class="selector-wsp-avatar">
+                            <svg viewBox="0 0 32 32" fill="currentColor">
+                                <path
+                                    d="M16.001 3C9.096 3 3.5 8.596 3.5 15.5c0 2.2.57 4.35 1.66 6.24L3 29l7.42-2.11a12.44 12.44 0 0 0 5.58 1.33h.01c6.9 0 12.5-5.6 12.5-12.5S22.9 3 16.001 3zm0 22.55h-.01a10.4 10.4 0 0 1-5.3-1.45l-.38-.22-3.94 1.12 1.15-3.83-.25-.4a10.36 10.36 0 0 1-1.6-5.53c0-5.74 4.67-10.4 10.42-10.4 2.78 0 5.4 1.08 7.36 3.05a10.32 10.32 0 0 1 3.05 7.36c0 5.74-4.67 10.4-10.5 10.4zm5.72-7.75c-.31-.16-1.86-.92-2.15-1.02-.29-.1-.5-.16-.71.16-.21.31-.81 1.02-.99 1.23-.18.21-.37.24-.68.08-.31-.16-1.31-.48-2.5-1.55-.92-.82-1.55-1.83-1.73-2.14-.18-.31-.02-.48.14-.63.14-.14.31-.37.47-.55.16-.18.21-.31.31-.52.1-.21.05-.39-.02-.55-.08-.16-.71-1.71-.97-2.34-.26-.61-.52-.53-.71-.54-.18-.01-.39-.01-.6-.01s-.55.08-.84.39c-.29.31-1.1 1.08-1.1 2.63s1.13 3.05 1.29 3.26c.16.21 2.22 3.39 5.38 4.75.75.32 1.34.51 1.8.66.76.24 1.44.21 1.99.13.61-.09 1.86-.76 2.12-1.5.26-.73.26-1.35.18-1.48-.07-.13-.28-.21-.59-.37z" />
+                            </svg>
+                        </span>
+                        <span class="selector-wsp-info">
+                            <span class="selector-wsp-nombre">{{ $contacto['nombre'] }}</span>
+                            <span class="selector-wsp-sub">Abrir chat de WhatsApp</span>
+                        </span>
+                        <svg class="selector-wsp-flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 18l6-6-6-6" />
+                        </svg>
+                    </button>
+                @endforeach
             </div>
         </div>
     </div>
@@ -1575,10 +1755,62 @@
                     partes.push(linea);
                 });
 
-                var mensaje = encodeURIComponent(partes.join('\n'));
-                var base = "{{ config('app.whatsapp_url', '#') }}";
-                var separador = base.includes('?') ? '&' : '?';
-                window.open(base + separador + 'text=' + mensaje, '_blank');
+                var textoMensaje = partes.join('\n');
+
+                if (esMayorista) {
+                    window.abrirSelectorWhatsapp(textoMensaje);
+                } else {
+                    var mensaje = encodeURIComponent(textoMensaje);
+                    var base = "{{ config('app.whatsapp_url', '#') }}";
+                    var separador = base.includes('?') ? '&' : '?';
+                    window.open(base + separador + 'text=' + mensaje, '_blank');
+                }
+            });
+        })();
+    </script>
+
+       <script>
+        // ---- Selector de WhatsApp (mayorista) ----
+        (function() {
+            var modal = document.getElementById('modal-selector-wsp');
+            if (!modal) return;
+            var cerradores = modal.querySelectorAll('[data-cerrar-selector-wsp]');
+            var mensajePendiente = '';
+
+            window.abrirSelectorWhatsapp = function(mensaje) {
+                mensajePendiente = mensaje || '';
+                modal.classList.add('abierto');
+                document.body.style.overflow = 'hidden';
+            };
+
+            function cerrar() {
+                modal.classList.remove('abierto');
+                document.body.style.overflow = '';
+            }
+
+            cerradores.forEach(function(el) {
+                el.addEventListener('click', cerrar);
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.classList.contains('abierto')) cerrar();
+            });
+
+            modal.querySelectorAll('[data-wsp-base]').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var base = btn.getAttribute('data-wsp-base');
+                    var separador = base.includes('?') ? '&' : '?';
+                    var url = base + (mensajePendiente ? separador + 'text=' + encodeURIComponent(
+                        mensajePendiente) : '');
+                    window.open(url, '_blank');
+                    cerrar();
+                });
+            });
+
+            document.querySelectorAll('[data-abrir-selector-wsp]').forEach(function(el) {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.abrirSelectorWhatsapp('');
+                });
             });
         })();
     </script>

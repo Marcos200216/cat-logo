@@ -3,11 +3,11 @@
 
 @section('contenido')
 
-    @php
+        @php
         $modo = $modo ?? 'normal';
         $prefijo = $modo === 'mayorista' ? 'mayorista' : 'tienda';
+        $esMayorista = $modo === 'mayorista';
     @endphp
-
     <style>
         /* ============ Utilidad: revelar al hacer scroll ============ */
         [data-revelar] {
@@ -591,9 +591,14 @@
                     el resto por WhatsApp.
                 </p>
             @endif
-            <div class="hero-acciones">
+                        <div class="hero-acciones">
                 <a href="#colecciones" class="btn-hero btn-hero-primario">Ver colecciones</a>
-                <a href="#" class="btn-hero btn-hero-secundario">Escríbenos</a>
+                @if ($esMayorista)
+                    <button type="button" class="btn-hero btn-hero-secundario" data-abrir-selector-wsp>Escríbenos</button>
+                @else
+                    <a href="{{ config('app.whatsapp_url', '#') }}" class="btn-hero btn-hero-secundario"
+                        target="_blank" rel="noopener">Escríbenos</a>
+                @endif
             </div>
         </div>
 
@@ -740,7 +745,11 @@
         <div class="cta-final-interior">
             <h2>¿Ya viste algo que <em>te gustó</em>?</h2>
             <p>Escríbenos por WhatsApp y con gusto te ayudamos a encontrarlo.</p>
-            <a href="{{ config('app.whatsapp_url') }}" class="btn-cta" target="_blank">Iniciar conversación</a>
+                        @if ($esMayorista)
+                <button type="button" class="btn-cta" data-abrir-selector-wsp>Iniciar conversación</button>
+            @else
+                <a href="{{ config('app.whatsapp_url', '#') }}" class="btn-cta" target="_blank" rel="noopener">Iniciar conversación</a>
+            @endif
         </div>
     </section>
 

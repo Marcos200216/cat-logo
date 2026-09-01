@@ -135,5 +135,18 @@ return [
     */
 
     'whatsapp_url' => env('WHATSAPP_URL', '#'),
+     
 
+    'facebook_url' => env('FACEBOOK_URL', '#'),
+'facebook_url_mayorista' => env('FACEBOOK_URL_MAYORISTA', '#'),
+
+'instagram_url' => env('INSTAGRAM_URL', '#'),
+'instagram_url_mayorista' => env('INSTAGRAM_URL_MAYORISTA', '#'),
+
+'whatsapp_url' => env('WHATSAPP_URL', '#'),
+
+'whatsapp_mayorista' => [
+    ['nombre' => env('WHATSAPP_MAYORISTA_1_NOMBRE', 'Contacto 1'), 'url' => env('WHATSAPP_MAYORISTA_1_URL', '#')],
+    ['nombre' => env('WHATSAPP_MAYORISTA_2_NOMBRE', 'Contacto 2'), 'url' => env('WHATSAPP_MAYORISTA_2_URL', '#')],
+],
 ];
