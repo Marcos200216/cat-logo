@@ -457,12 +457,11 @@
     <div class="tarjeta">
         <div class="tabla-scroll">
             <table>
-                <thead>
+                                <thead>
                     <tr>
                         <th style="width: 32px;"></th>
                         <th style="width: 160px;">Categoría</th>
                         <th>Subcategoría</th>
-                        <th style="width: 70px;">Orden</th>
                         <th style="width: 120px;">Estado</th>
                         <th style="width: 150px;"></th>
                     </tr>
@@ -470,10 +469,9 @@
                 <tbody id="tabla-subcategorias">
                     @forelse ($subcategorias as $sub)
                         <tr data-nombre="{{ Str::lower($sub->nombre.' '.$sub->categoria->nombre) }}" data-categoria-id="{{ $sub->categoria_id }}" data-id="{{ $sub->id }}">
-                            <td class="asa-arrastre">⠿</td>
+                                                        <td class="asa-arrastre">⠿</td>
                             <td data-label="Categoría"><span class="etiqueta-categoria">{{ $sub->categoria->nombre }}</span></td>
                             <td data-label="Subcategoría"><span class="nombre-categoria">{{ $sub->nombre }}</span></td>
-                            <td data-label="Orden"><span class="num-orden">{{ str_pad($sub->orden, 2, '0', STR_PAD_LEFT) }}</span></td>
                             <td data-label="Estado">
                                 <span class="badge {{ $sub->activo ? 'badge-activo' : 'badge-inactivo' }}">
                                     {{ $sub->activo ? 'Activa' : 'Inactiva' }}
@@ -488,7 +486,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="vacio">No hay subcategorías todavía. Crea la primera con el botón de arriba.</td></tr>
+                                                <tr><td colspan="5" class="vacio">No hay subcategorías todavía. Crea la primera con el botón de arriba.</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -640,7 +638,7 @@ function abrirModalEditar(id, categoriaId, nombre, activo) {
     animation: 150,
     ghostClass: 'fila-fantasma',
     dragClass: 'fila-arrastrando',
-    onEnd: async function () {
+        onEnd: async function () {
         const filas = [...document.querySelectorAll('#tabla-subcategorias tr[data-id]')];
         const ids = filas.map(fila => fila.dataset.id);
 
@@ -653,13 +651,6 @@ function abrirModalEditar(id, categoriaId, nombre, activo) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ ids }),
-            });
-
-            filas.forEach(function (fila, posicion) {
-                const etiquetaOrden = fila.querySelector('.num-orden');
-                if (etiquetaOrden) {
-                    etiquetaOrden.textContent = String(posicion).padStart(2, '0');
-                }
             });
         } catch (error) {
             Swal.fire({ icon: 'error', title: 'No se pudo guardar el nuevo orden', text: 'Intenta de nuevo.' });
