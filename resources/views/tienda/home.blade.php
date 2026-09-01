@@ -573,25 +573,24 @@
 
     <!-- Hero -->
     <section class="hero">
-        <div class="hero-texto" data-revelar>
+                <div class="hero-texto" data-revelar>
             @if ($modo === 'mayorista')
                 <span class="ojo-eyebrow">Catálogo mayorista</span>
-                <h1>Pedidos al <em>por mayor</em>, sin vueltas.</h1>
+                <h1>Pedidos al <em>por mayor</em></h1>
                 <p>
-                    Explora nuestras colecciones mayoristas y arma tu pedido por docenas
-                    o medias docenas. Sin compras en línea, sin complicaciones &mdash;
-                    solo selecciona lo que necesitas y coordinamos el resto por WhatsApp.
+                    Explora nuestras colecciones mayoristas y arma tu pedido por docenas o medias docenas. Sin compras en línea, sin complicaciones.
+                    Solo selecciona lo que necesitas y coordinamos el envío o la entrega por WhatsApp.
                 </p>
             @else
                 <span class="ojo-eyebrow">Catálogo digital</span>
-                <h1>Encuentra lo que <em>buscas</em>, sin vueltas.</h1>
+                <h1>Encuentra lo que <em>buscas</em></h1>
                 <p>
                     Explora nuestras colecciones y arma tu consulta. Sin compras en línea,
                     sin complicaciones &mdash; solo selecciona lo que te gusta y coordinamos
                     el resto por WhatsApp.
                 </p>
             @endif
-                        <div class="hero-acciones">
+            <div class="hero-acciones">
                 <a href="#colecciones" class="btn-hero btn-hero-primario">Ver colecciones</a>
                 @if ($esMayorista)
                     <button type="button" class="btn-hero btn-hero-secundario" data-abrir-selector-wsp>Escríbenos</button>
