@@ -197,23 +197,26 @@
             border-bottom-color: var(--musgo);
         }
 
-        .btn-whatsapp-nav {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: linear-gradient(135deg, #2CD46A, #22B85A);
-            color: #FFFFFF;
-            padding: 8px 20px 8px 8px;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            border-radius: 999px;
-            flex-shrink: 0;
-            box-shadow: 0 4px 14px -4px rgba(37, 211, 102, 0.55);
-            transition: box-shadow 0.25s ease, transform 0.25s ease, background 0.25s ease;
-        }
+       .btn-whatsapp-nav {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #2CD46A, #22B85A);
+    color: #FFFFFF;
+    padding: 8px 20px 8px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px -4px rgba(37, 211, 102, 0.55);
+    transition: box-shadow 0.25s ease, transform 0.25s ease, background 0.25s ease;
+    border: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
 
         .btn-whatsapp-nav:hover {
             background: linear-gradient(135deg, #25D366, #1EA952);
@@ -1621,11 +1624,16 @@
                 badge.classList.toggle('oculto', t === 0);
             }
 
+            function vaciar() {
+                guardar([]);
+            }
+
             return {
                 leer: leer,
                 agregar: agregar,
                 quitar: quitar,
                 cambiarCantidad: cambiarCantidad,
+                vaciar: vaciar,
                 total: total,
                 actualizarBadge: actualizarBadge
             };
@@ -1768,6 +1776,8 @@
                     var base = "{{ config('app.whatsapp_url', '#') }}";
                     var separador = base.includes('?') ? '&' : '?';
                     window.open(base + separador + 'text=' + mensaje, '_blank');
+                    window.CarritoAzur.vaciar();
+                    cerrar(); // cierra el modal del carrito
                 }
             });
         })();
@@ -1800,15 +1810,23 @@
             });
 
             modal.querySelectorAll('[data-wsp-base]').forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    var base = btn.getAttribute('data-wsp-base');
-                    var separador = base.includes('?') ? '&' : '?';
-                    var url = base + (mensajePendiente ? separador + 'text=' + encodeURIComponent(
-                        mensajePendiente) : '');
-                    window.open(url, '_blank');
-                    cerrar();
-                });
-            });
+    btn.addEventListener('click', function() {
+        var base = btn.getAttribute('data-wsp-base');
+        var separador = base.includes('?') ? '&' : '?';
+        var url = base + (mensajePendiente ? separador + 'text=' + encodeURIComponent(
+            mensajePendiente) : '');
+        window.open(url, '_blank');
+        window.CarritoAzur.vaciar();
+        cerrar();
+
+        // También cierra el modal del carrito si quedó abierto detrás
+        var modalCarrito = document.getElementById('modal-carrito');
+        if (modalCarrito) {
+            modalCarrito.classList.remove('abierto');
+            document.body.style.overflow = '';
+        }
+    });
+});
 
             document.querySelectorAll('[data-abrir-selector-wsp]').forEach(function(el) {
                 el.addEventListener('click', function(e) {
