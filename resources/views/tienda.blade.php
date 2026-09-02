@@ -561,7 +561,7 @@
             }
         }
 
-                    /* ============ Modal selector de WhatsApp ============ */
+        /* ============ Modal selector de WhatsApp ============ */
         .modal-selector-wsp .modal-ayuda-caja {
             padding: 30px 26px 26px;
         }
@@ -658,6 +658,7 @@
                 padding: 26px 20px 22px;
             }
         }
+
         /* ============ Footer ============ */
         .pie {
             background: var(--tinta);
@@ -776,7 +777,7 @@
             height: 26px;
         }
 
-              .pie-redes-iconos .icono-whatsapp {
+        .pie-redes-iconos .icono-whatsapp {
             color: #25D366;
             background: none;
             border: none;
@@ -1135,11 +1136,12 @@
                 bottom: 76px;
             }
         }
+
         .carrito-cantidad-fija {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--tinta);
-}
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--tinta);
+        }
     </style>
 
     @stack('estilos')
@@ -1147,7 +1149,7 @@
 
 <body>
 
-       @php
+    @php
         $modo = $modo ?? 'normal';
         $prefijo = $modo === 'mayorista' ? 'mayorista' : 'tienda';
         $esMayorista = $modo === 'mayorista';
@@ -1181,7 +1183,7 @@
                     @endforeach
                 </div>
 
-                                @if ($esMayorista)
+                @if ($esMayorista)
                     <button type="button" class="btn-whatsapp-nav" data-abrir-selector-wsp>
                         <span class="icono-wsp">
                             <svg viewBox="0 0 32 32" fill="currentColor">
@@ -1222,7 +1224,7 @@
                     <a href="{{ route($prefijo . '.categoria', $cat->slug) }}">{{ $cat->nombre }}</a>
                 @endforeach
             </nav>
-                       @if ($esMayorista)
+            @if ($esMayorista)
                 <button type="button" class="btn-whatsapp-nav" data-abrir-selector-wsp>
                     <span class="icono-wsp">
                         <svg viewBox="0 0 32 32" fill="currentColor">
@@ -1274,22 +1276,22 @@
                     <span class="ojo-eyebrow">Síguenos</span>
                     <div class="pie-redes-iconos">
                         {{-- TODO: reemplazar "#" por el link real de Facebook --}}
-                                                <a href="{{ $facebookUrl }}" target="_blank" rel="noopener"
-                            aria-label="Facebook" class="icono-facebook">
+                        <a href="{{ $facebookUrl }}" target="_blank" rel="noopener" aria-label="Facebook"
+                            class="icono-facebook">
                             <svg viewBox="0 0 320 512" fill="currentColor">
                                 <path
                                     d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z" />
                             </svg>
                         </a>
-                        <a href="{{ $instagramUrl }}" target="_blank" rel="noopener"
-                            aria-label="Instagram" class="icono-instagram">
+                        <a href="{{ $instagramUrl }}" target="_blank" rel="noopener" aria-label="Instagram"
+                            class="icono-instagram">
                             <svg viewBox="0 0 24 24" fill="currentColor">
                                 <path
                                     d="M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.97.24 2.43.4.61.24 1.05.52 1.51.98.46.46.74.9.98 1.51.16.46.35 1.26.4 2.43.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.24 1.97-.4 2.43-.24.61-.52 1.05-.98 1.51-.46.46-.9.74-1.51.98-.46.16-1.26.35-2.43.4-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.97-.24-2.43-.4a4.1 4.1 0 0 1-1.51-.98 4.1 4.1 0 0 1-.98-1.51c-.16-.46-.35-1.26-.4-2.43-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.24-1.97.4-2.43.24-.61.52-1.05.98-1.51.46-.46.9-.74 1.51-.98.46-.16 1.26-.35 2.43-.4C8.42 2.21 8.8 2.2 12 2.2zm0 3.05a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5zm0 11.13a4.38 4.38 0 1 1 0-8.76 4.38 4.38 0 0 1 0 8.76zm7.02-11.4a1.58 1.58 0 1 1-3.15 0 1.58 1.58 0 0 1 3.15 0z" />
                             </svg>
                         </a>
-                                               @if ($esMayorista)
-                                                        <button type="button" data-abrir-selector-wsp aria-label="WhatsApp"
+                        @if ($esMayorista)
+                            <button type="button" data-abrir-selector-wsp aria-label="WhatsApp"
                                 class="icono-whatsapp">
                                 <svg viewBox="0 0 32 32" fill="currentColor">
                                     <path
@@ -1388,7 +1390,7 @@
                 </div>
             @endif
 
-                        <div class="modal-ayuda-cta">
+            <div class="modal-ayuda-cta">
                 @if ($esMayorista)
                     <a href="#" data-abrir-selector-wsp>
                         ¿Tienes dudas? Escríbenos directamente →
@@ -1443,7 +1445,7 @@
     </div>
 
     <!-- Modal: selector de WhatsApp (solo mayorista) -->
-        <!-- Modal: selector de WhatsApp (solo mayorista) -->
+    <!-- Modal: selector de WhatsApp (solo mayorista) -->
     <div class="modal-ayuda modal-selector-wsp" id="modal-selector-wsp" style="max-width:none;">
         <div class="modal-ayuda-fondo" data-cerrar-selector-wsp></div>
         <div class="modal-ayuda-caja" role="dialog" aria-modal="true" aria-labelledby="selector-wsp-titulo"
@@ -1746,13 +1748,15 @@
 
                 var partes = ['Hola, quisiera consultar por estos productos:', ''];
                 items.forEach(function(item, idx) {
-                    var linea = (idx + 1) + '. ' + item.nombre + ' (' + [item.categoria, item
-                        .subcategoria
-                    ].filter(Boolean).join(' / ') + ')';
-                    if (item.talla) linea += ' — Talla: ' + item.talla;
-                    if (item.color) linea += (item.talla ? ', ' : ' — ') + 'Color: ' + item.color;
-                    linea += ' — Cantidad: ' + item.cantidad;
+                    var detalle = [item.categoria, item.subcategoria].filter(Boolean).join(' / ');
+                    var linea = (idx + 1) + '. *' + item.nombre + '*';
+                    if (detalle) linea += '\n' + detalle;
+                    if (item.talla) linea += '\n' + 'Talla: ' + item.talla;
+                    if (item.color) linea += '\n' + 'Color: ' + item.color;
+                    linea += '\n' + 'Cantidad: ' + item.cantidad;
+                    if (item.url) linea += '\n' + item.url;
                     partes.push(linea);
+                    partes.push(''); // línea en blanco entre productos
                 });
 
                 var textoMensaje = partes.join('\n');
@@ -1769,7 +1773,7 @@
         })();
     </script>
 
-       <script>
+    <script>
         // ---- Selector de WhatsApp (mayorista) ----
         (function() {
             var modal = document.getElementById('modal-selector-wsp');
