@@ -11,37 +11,37 @@ use Illuminate\Validation\Rule;
 
 class PanelProductoController extends Controller
 {
-    // Fijo en 'mayorista' porque por ahora el panel solo carga a ese canal
-    private string $canal = 'mayorista';
+    public function categorias(Request $request)
+    {
+        $canal = $request->query('canal', 'mayorista');
 
-public function categorias()
-{
-    $subcategorias = \App\Models\Subcategoria::with('categoria')
-        ->whereHas('categoria', fn($q) => $q->where('canal', $this->canal))
-        ->orderBy('categoria_id')
-        ->orderBy('orden')
-        ->get();
+        $subcategorias = \App\Models\Subcategoria::with('categoria')
+            ->whereHas('categoria', fn($q) => $q->where('canal', $canal))
+            ->orderBy('categoria_id')
+            ->orderBy('orden')
+            ->get();
 
-    $resultado = $subcategorias->map(function ($sub) {
-        return [
-            'categoria' => $sub->categoria->nombre,
-            'subcategoria_id' => $sub->id,
-            'subcategoria' => $sub->nombre,
-        ];
-    });
+        $resultado = $subcategorias->map(function ($sub) {
+            return [
+                'categoria' => $sub->categoria->nombre,
+                'subcategoria_id' => $sub->id,
+                'subcategoria' => $sub->nombre,
+            ];
+        });
 
-    return response()->json($resultado);
-}
-
+        return response()->json($resultado);
+    }
 
     public function store(Request $request)
     {
+        $canal = $request->input('canal', 'mayorista');
+
         $datos = $request->validate([
             'subcategoria_id' => [
                 'required',
                 Rule::exists('subcategorias', 'id')->whereIn(
                     'categoria_id',
-                    Categoria::where('canal', $this->canal)->pluck('id')
+                    Categoria::where('canal', $canal)->pluck('id')
                 ),
             ],
             'nombre' => ['required', 'string', 'max:150'],
@@ -52,7 +52,8 @@ public function categorias()
         $datos['slug'] = Str::slug($datos['nombre']) . '-' . Str::random(5);
         $datos['destacado'] = false;
         $datos['activo'] = true;
-        $datos['tiene_color'] = $request->boolean('tiene_color');
+        // En el canal normal todavía no se manejan colores: siempre queda apagado.
+        $datos['tiene_color'] = $canal === 'normal' ? false : $request->boolean('tiene_color');
 
         $producto = Producto::create($datos);
 
@@ -76,5 +77,21 @@ public function categorias()
             'id' => $img->id,
             'url' => asset('storage/' . $img->ruta),
         ]);
+    }
+
+    public function variantes(Request $request, Producto $producto)
+    {
+        $datos = $request->validate([
+            'talla' => ['required', 'string', 'max:20'],
+            'stock' => ['required', 'integer', 'min:0'],
+        ]);
+
+        $variante = $producto->variantes()->create([
+            'talla' => $datos['talla'],
+            'color' => null,
+            'stock' => $datos['stock'],
+        ]);
+
+        return response()->json(['id' => $variante->id]);
     }
 }
