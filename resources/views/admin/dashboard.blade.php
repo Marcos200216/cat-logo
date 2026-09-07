@@ -536,7 +536,8 @@
                                             {{ $producto->subcategoria->nombre }}</td>
                                         <td class="stock-bajo">{{ $producto->stock_minimo }}</td>
                                         <td class="enlace-ver">
-                                            href="{{ route('admin.productos.show', $producto) }}">Ver</a></td>
+                                            <a href="{{ route('admin.productos.show', $producto) }}">Ver</a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
