@@ -55,7 +55,12 @@ class TiendaController extends Controller
             $query->whereHas('subcategoria', fn ($q) => $q->where('slug', $subSlug));
         })
         ->when($buscar, function ($query) use ($buscar) {
-            $query->where('nombre', 'like', "%{$buscar}%");
+            $query->where(function ($q) use ($buscar) {
+                $q->where('nombre', 'like', "%{$buscar}%")
+                  ->orWhereHas('subcategoria', function ($sq) use ($buscar) {
+                      $sq->where('nombre', 'like', "%{$buscar}%");
+                  });
+            });
         })
         ->when($talla, function ($query) use ($talla) {
             $query->whereHas('variantes', fn ($q) => $q->where('talla', $talla));
@@ -80,7 +85,12 @@ class TiendaController extends Controller
             $query->whereHas('subcategoria', fn ($q) => $q->where('slug', $subSlug));
         })
         ->when($buscar, function ($query) use ($buscar) {
-            $query->where('nombre', 'like', "%{$buscar}%");
+            $query->where(function ($q) use ($buscar) {
+                $q->where('nombre', 'like', "%{$buscar}%")
+                  ->orWhereHas('subcategoria', function ($sq) use ($buscar) {
+                      $sq->where('nombre', 'like', "%{$buscar}%");
+                  });
+            });
         })
         ->with(['variantes' => fn ($q) => $q->whereNotNull('talla')->where('talla', '!=', '')])
         ->get()
