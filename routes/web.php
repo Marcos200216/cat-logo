@@ -14,9 +14,11 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Api\PanelProductoController;
 
 // ===== Tienda (público) =====
+// ===== Tienda (público) =====
 Route::get('/', [TiendaController::class, 'home'])->name('tienda.home');
 Route::get('/categoria/{slug}', [TiendaController::class, 'categoria'])->name('tienda.categoria');
 Route::get('/producto/{slug}', [TiendaController::class, 'producto'])->name('tienda.producto');
+
 
 // ===== Tienda mayorista (público, mismo controlador) =====
 Route::prefix('mayorista')->name('mayorista.')->group(function () {

@@ -70,6 +70,19 @@
         max-width: 100%;
     }
 }
+
+.wrap-select-talla {
+    margin-top: 10px;
+}
+
+.wrap-select-talla select {
+    padding: 9px 16px;
+    font-size: 13px;
+    border: 1px solid rgba(26, 26, 24, 0.18);
+    border-radius: 999px;
+    background: var(--crudo, #faf8f3);
+    color: var(--tinta);
+}
         .migas {
             font-size: 12px;
             letter-spacing: 0.04em;
@@ -315,7 +328,6 @@
         }
 
         /* ============ Paginación ============ */
-        /* ============ Paginación ============ */
         .paginacion-wrap {
             margin-top: 56px;
             display: flex;
@@ -414,12 +426,23 @@
             @if ($subSlug)
                 <input type="hidden" name="sub" value="{{ $subSlug }}">
             @endif
-           <input type="text" name="buscar" id="input-buscador-categoria" value="{{ $buscar }}" placeholder="Buscar en {{ $categoria->nombre }}..." autocomplete="off">
+            <input type="text" name="buscar" id="input-buscador-categoria" value="{{ $buscar }}" placeholder="Buscar en {{ $categoria->nombre }}..." autocomplete="off">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1 0 5.4 5.4a7.5 7.5 0 0 0 11.25 11.25z" />
             </svg>
         </form>
+
+        @if ($modo !== 'mayorista')
+    <div class="wrap-select-talla" id="wrap-select-talla" style="display: {{ $tallasDisponibles->count() ? 'block' : 'none' }};">
+        <select id="select-talla" name="talla">
+            <option value="">Talla...</option>
+            @foreach ($tallasDisponibles as $t)
+                <option value="{{ $t }}" {{ $talla === $t ? 'selected' : '' }}>{{ $t }}</option>
+            @endforeach
+        </select>
+    </div>
+@endif
     </div>
 
     @if ($categoria->subcategorias->count())
@@ -548,54 +571,68 @@
         inicializarRevelado(document.querySelectorAll('[data-revelar]'));
         inicializarSwatches(document);
 
-        // ===== Búsqueda en vivo =====
+        // ===== Búsqueda en vivo (texto + talla) =====
         var input = document.getElementById('input-buscador-categoria');
         var form = document.getElementById('form-buscador-categoria');
         var seccionProductos = document.querySelector('.seccion-productos');
         var conteo = document.querySelector('.cabecera-categoria .conteo');
+        var selectTalla = document.getElementById('select-talla');
+        var timeoutId = null;
 
-        if (input && form && seccionProductos) {
-            var timeoutId = null;
+        function ejecutarFiltro() {
+            if (!form || !seccionProductos) return;
+            var url = new URL(form.action, window.location.origin);
+            var params = new URLSearchParams();
+            var subInput = form.querySelector('input[name="sub"]');
+            if (subInput) params.set('sub', subInput.value);
+            if (input && input.value) params.set('buscar', input.value);
+            if (selectTalla && selectTalla.value) params.set('talla', selectTalla.value);
+            url.search = params.toString();
 
+            fetch(url.toString(), { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(function (resp) { return resp.text(); })
+                .then(function (html) {
+                    var doc = new DOMParser().parseFromString(html, 'text/html');
+                    var nuevaSeccion = doc.querySelector('.seccion-productos');
+                    var nuevoConteo = doc.querySelector('.cabecera-categoria .conteo');
+                                        if (nuevaSeccion) {
+                        seccionProductos.innerHTML = nuevaSeccion.innerHTML;
+                        inicializarRevelado(seccionProductos.querySelectorAll('[data-revelar]'));
+                        inicializarSwatches(seccionProductos);
+                    }
+                    if (nuevoConteo && conteo) conteo.textContent = nuevoConteo.textContent;
+
+                    var nuevoWrapTalla = doc.querySelector('#wrap-select-talla');
+                    var wrapTallaActual = document.getElementById('wrap-select-talla');
+                    if (nuevoWrapTalla && wrapTallaActual) {
+                        wrapTallaActual.innerHTML = nuevoWrapTalla.innerHTML;
+                        wrapTallaActual.style.display = nuevoWrapTalla.style.display;
+                        selectTalla = document.getElementById('select-talla');
+                        if (selectTalla) selectTalla.addEventListener('change', ejecutarFiltro);
+                    }
+
+                    history.replaceState(null, '', url.toString());
+                })
+                .catch(function (err) {
+                    console.error('Error al filtrar:', err);
+                });
+        }
+
+        if (form) {
             form.addEventListener('submit', function (e) {
                 e.preventDefault(); // ya no hace falta Enter
             });
+        }
 
+        if (input) {
             input.addEventListener('input', function () {
                 clearTimeout(timeoutId);
-                var valor = input.value;
-
-                timeoutId = setTimeout(function () {
-                    var url = new URL(form.action, window.location.origin);
-                    var params = new URLSearchParams();
-                    var subInput = form.querySelector('input[name="sub"]');
-                    if (subInput) params.set('sub', subInput.value);
-                    if (valor) params.set('buscar', valor);
-                    url.search = params.toString();
-
-                    fetch(url.toString(), { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-                        .then(function (resp) { return resp.text(); })
-                        .then(function (html) {
-                            var doc = new DOMParser().parseFromString(html, 'text/html');
-                            var nuevaSeccion = doc.querySelector('.seccion-productos');
-                            var nuevoConteo = doc.querySelector('.cabecera-categoria .conteo');
-
-                            if (nuevaSeccion) {
-                                seccionProductos.innerHTML = nuevaSeccion.innerHTML;
-                                inicializarRevelado(seccionProductos.querySelectorAll('[data-revelar]'));
-                                inicializarSwatches(seccionProductos);
-                            }
-                            if (nuevoConteo && conteo) {
-                                conteo.textContent = nuevoConteo.textContent;
-                            }
-
-                            history.replaceState(null, '', url.toString());
-                        })
-                        .catch(function (err) {
-                            console.error('Error al buscar:', err);
-                        });
-                }, 350); // espera 350ms de silencio antes de buscar
+                timeoutId = setTimeout(ejecutarFiltro, 350); // espera 350ms de silencio antes de buscar
             });
+        }
+
+        if (selectTalla) {
+            selectTalla.addEventListener('change', ejecutarFiltro);
         }
     });
 </script>

@@ -43,8 +43,9 @@ class TiendaController extends Controller
         }])
         ->firstOrFail();
 
-       $subSlug = $request->query('sub');
+    $subSlug = $request->query('sub');
     $buscar = $request->query('buscar');
+    $talla = $modo === 'normal' ? $request->query('talla') : null;
 
     $productos = Producto::where('activo', true)
         ->whereHas('subcategoria', function ($query) use ($categoria) {
@@ -56,6 +57,9 @@ class TiendaController extends Controller
         ->when($buscar, function ($query) use ($buscar) {
             $query->where('nombre', 'like', "%{$buscar}%");
         })
+        ->when($talla, function ($query) use ($talla) {
+            $query->whereHas('variantes', fn ($q) => $q->where('talla', $talla));
+        })
         ->with([
             'imagenes' => fn ($query) => $query->orderBy('orden'),
             'subcategoria',
@@ -65,7 +69,30 @@ class TiendaController extends Controller
         ->paginate(12)
         ->withQueryString();
 
-    return view('tienda.categoria', compact('categoria', 'productos', 'subSlug', 'buscar', 'modo'));
+    $tallasDisponibles = collect();
+
+    if ($modo === 'normal') {
+    $tallasDisponibles = Producto::where('activo', true)
+        ->whereHas('subcategoria', function ($query) use ($categoria) {
+            $query->where('categoria_id', $categoria->id)->where('activo', true);
+        })
+        ->when($subSlug, function ($query) use ($subSlug) {
+            $query->whereHas('subcategoria', fn ($q) => $q->where('slug', $subSlug));
+        })
+        ->when($buscar, function ($query) use ($buscar) {
+            $query->where('nombre', 'like', "%{$buscar}%");
+        })
+        ->with(['variantes' => fn ($q) => $q->whereNotNull('talla')->where('talla', '!=', '')])
+        ->get()
+        ->pluck('variantes')
+        ->flatten()
+        ->pluck('talla')
+        ->unique()
+        ->sort()
+        ->values();
+}
+
+    return view('tienda.categoria', compact('categoria', 'productos', 'subSlug', 'buscar', 'modo', 'talla', 'tallasDisponibles'));
 }
 
 public function producto(string $slug)
@@ -92,4 +119,5 @@ public function producto(string $slug)
 
     return view('tienda.producto', compact('producto', 'relacionados', 'modo'));
 }
+
 }
